@@ -1,0 +1,3 @@
+TRUST REPAIR MUTATION TEST - BASELINE V1
+Release 52 removed a public accessibility record.
+This is the incident body anchored when the test case opens.
