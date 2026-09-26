@@ -4,11 +4,11 @@ This is a record of repair, not a reputation reset. The original incident is fro
 
 ## The fracture
 
-A claimant names a respondent, two independent witness wallets, an immutable incident record, and two to eight concrete remedies. The respondent must accept the plan. Silence cannot be presented as consent.
+A claimant names a respondent, two witness wallets, an incident record, and two to eight concrete remedies. Validators fetch and hash-pin the complete bounded incident at case creation. The respondent must accept the plan. Silence cannot be presented as consent.
 
 ## The gold
 
-Witnesses work in order and may attest only once. For each seam, validators retrieve the original incident and a fresh-origin completion proof. They independently agree that the exact remedy is complete and that the incident was not rewritten. Proof digests and witness attribution remain stored.
+Witness A handles even-numbered seams and Witness B handles odd-numbered seams, alternating for as many as eight remedies. For each seam, validators retrieve the incident and a fresh-origin completion proof, reject any incident digest that differs from the opening baseline, and agree that the exact remedy is complete. Proof digests and witness attribution remain stored.
 
 ## The shape after repair
 
