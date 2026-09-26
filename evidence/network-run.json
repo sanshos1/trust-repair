@@ -34,7 +34,10 @@
     "mutatedDigest": "e22e1f5c5b58326fd060e35d22e403ab10e6effd5ffe15debf108d12126b65a7",
     "transaction": "0xedd92344de1c707444f4f5c18094e7f08c5b2ea4bc1629e4dbd5528ba8415551",
     "leaderResult": "[EXPECTED] incident baseline changed",
-    "networkStatusAtCapture": "COMMITTING",
-    "consensusAtCapture": "NO_MAJORITY"
+    "validatorReproductions": 3,
+    "validatorResult": "[EXPECTED] incident baseline changed",
+    "networkStatusAtCapture": "FINALIZED",
+    "consensusAtCapture": "MAJORITY_DISAGREE",
+    "interpretation": "Expected negative-path rollback: the leader and three active validators rejected the mutated incident; two validators were cancelled after quorum."
   }
 }
