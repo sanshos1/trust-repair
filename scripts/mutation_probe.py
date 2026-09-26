@@ -45,6 +45,11 @@ def wait(client, transaction):
 def decoded_result(leader):
     for key in ("result", "output", "return_data", "error"):
         value = leader.get(key)
+        if isinstance(value, dict):
+            payload = value.get("payload")
+            if isinstance(payload, str):
+                return payload
+            value = value.get("raw")
         if not isinstance(value, str):
             continue
         try:
@@ -55,8 +60,9 @@ def decoded_result(leader):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("phase", choices=("open", "attempt"))
+parser.add_argument("phase", choices=("open", "attempt", "inspect", "peek"))
 parser.add_argument("case_id", nargs="?")
+parser.add_argument("transaction", nargs="?")
 args = parser.parse_args()
 
 claimant, respondent, witness_a, witness_b = [account(slot) for slot in (3, 4, 5, 6)]
@@ -106,7 +112,7 @@ if args.phase == "open":
         ),
         flush=True,
     )
-else:
+elif args.phase == "attempt":
     if not args.case_id:
         raise RuntimeError("attempt phase requires case_id")
     witness_client = create_client(chain=studionet, account=witness_a)
@@ -132,3 +138,32 @@ else:
         raise RuntimeError("Mutated incident was unexpectedly accepted")
     if "incident baseline changed" not in error:
         raise RuntimeError(f"Unexpected rejection reason: {error}")
+elif args.phase == "inspect":
+    if not args.transaction:
+        raise RuntimeError("inspect phase requires case_id and transaction")
+    witness_client = create_client(chain=studionet, account=witness_a)
+    receipt, leader = wait(witness_client, args.transaction)
+    print(
+        json.dumps(
+            {
+                "caseId": args.case_id,
+                "transaction": args.transaction,
+                "status": receipt.get("status_name"),
+                "consensus": receipt.get("result_name"),
+                "leaderExecution": leader.get("execution_result"),
+                "error": decoded_result(leader),
+            }
+        ),
+        flush=True,
+    )
+else:
+    if not args.transaction:
+        raise RuntimeError("peek phase requires case_id and transaction")
+    witness_client = create_client(chain=studionet, account=witness_a)
+    print(
+        json.dumps(
+            witness_client.get_transaction(transaction_hash=args.transaction),
+            default=str,
+        ),
+        flush=True,
+    )
